@@ -4184,12 +4184,22 @@ fieldset:disabled .btn {
     --bs-nav-link-color: var(--bs-navbar-color);
     --bs-nav-link-hover-color: var(--bs-navbar-hover-color);
     --bs-nav-link-disabled-color: var(--bs-navbar-disabled-color);
+    
     display: flex;
     flex-direction: column;
     padding-left: 0;
     margin-bottom: 0;
     list-style: none;
+
+  
+    position: fixed; /* Fixes it relative to the viewport */
+    top: 0; /* Aligns it to the top of the screen */
+    right: 0; /* Aligns it to the right of the screen */
+    z-index: 1030; /* Ensures it remains above other elements */
+
+    padding: .5rem; 
 }
+
 
 .navbar-nav .show>.nav-link,
 .navbar-nav .nav-link.active {
