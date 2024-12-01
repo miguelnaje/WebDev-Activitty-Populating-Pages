@@ -8,25 +8,42 @@ class PopulatingPagesController extends Controller
 {
     public function index(Request $request)
     {
-        // Get the number of months from the request or default to 1
-        $months = $request->input('months', 1);
-
-        // Validate that 'months' is a positive integer
-        if (!is_numeric($months) || $months < 1) {
-            $months = 1; // Default to 1 month if the input is invalid
-        }
-
-        // Generate posts for Username1 only (assuming 30 days per month)
+        $startMonth = $request->input('start_month');
+        $endMonth = $request->input('end_month');
         $posts = [];
-        for ($i = 1; $i <= $months * 30; $i++) {
-            $posts[] = [
-                'Username' => 'Username1', // Fixed to Username1
-                'date' => now()->subDays($i)->toDateString(),
-                'content' => 'This is post number ' . $i . '. hotdooooooooog',
-            ];
+
+        // Define the month names array
+        $monthNames = [
+            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+        ];
+
+        if ($startMonth && $endMonth) {
+            // Validate month range
+            if (!is_numeric($startMonth) || $startMonth < 1 || $startMonth > 12) {
+                $startMonth = 1;
+            }
+
+            if (!is_numeric($endMonth) || $endMonth < 1 || $endMonth > 12) {
+                $endMonth = 12;
+            }
+
+            // Ensure startMonth <= endMonth
+            if ($startMonth > $endMonth) {
+                list($startMonth, $endMonth) = [$endMonth, $startMonth];
+            }
+
+            // Generate posts for the specified range of months using month names
+            for ($month = $startMonth; $month <= $endMonth; $month++) {
+                $posts[] = [
+                    'Username' => $monthNames[$month],  // Map month number to month name
+                    'month' => $month,                   // Store month number (for future use)
+                    'content' => "This is the month: " . $monthNames[$month],  // Use month name in content
+                ];
+            }
         }
 
-        // Return the view with the posts
-        return view('dashboard', compact('posts', 'months'));
+        return view('dashboard', compact('posts', 'startMonth', 'endMonth'));
     }
 }
